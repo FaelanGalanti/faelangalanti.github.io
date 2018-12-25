@@ -1,3 +1,9 @@
 # IDE FIles
 .idea/
 *.iml
+
+# Node Files
+node_modules/
+
+# Project Files
+*.html
