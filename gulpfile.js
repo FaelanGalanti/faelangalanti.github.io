@@ -6,89 +6,122 @@
 
 
 // NPM Modules
-const cleanCSS = require('gulp-clean-css');
-const gulp     = require('gulp');
-const header   = require('gulp-header');
-const merge    = require('merge-stream');
-const pug      = require('gulp-pug');
-const rename   = require('gulp-rename');
-const sass     = require('gulp-sass');
+const _              = require('lodash');
+const cleanCSS       = require('gulp-clean-css');
+const composer       = require('gulp-uglify/composer');
+const gulp           = require('gulp');
+const header         = require('gulp-header');
+const merge          = require('merge-stream');
+const pug            = require('gulp-pug');
+const rename         = require('gulp-rename');
+const sass           = require('gulp-sass');
+const uglifyes       = require('uglify-es');
 
 
 // Local Modules
-const pkg    = require('./package.json');
+const pkg            = require('./package.json');
 
 
-// Constants
-const BANNER_TEXT = [
+// Compose uglify for es6
+const uglify         = composer(uglifyes, console);
+
+
+// Compiled source headers
+const BANNER_TEXT    = [
     `<%= pkg.title %> v<%= pkg.version %> (<%= pkg.homepage %>)`,
     `Copyright ${(new Date()).getFullYear()} <%= pkg.author %>`
 ];
-const BANNER_HTML = `<!--\n    ${BANNER_TEXT.join('\n    ')}\n-->\n`;
-const BANNER_CSS = `/*\n * ${BANNER_TEXT.join('\n * ')}\n */`;
+const BANNER_HTML    = `<!--\n    ${BANNER_TEXT.join('\n    ')}\n-->\n`;
+const BANNER_CSS     = `/*\n * ${BANNER_TEXT.join('\n * ')}\n */\n`;
+const BANNER_JS      = `/*\n * ${BANNER_TEXT.join('\n * ')}\n */\n`;
+
+
+// Gulp constants
+const PUG_SRC        = ['**/*.pug', '!node_modules/**/*.pug'];
+const HTML_DEST      = './';
+const PUG_TASK       = 'pug';
+const SCSS_SRC       = ['./src/css/*.scss'];
+const CSS_DEST       = './src/css';
+const CSS_TASK       = 'css';
+const JS_SRC         = ['./src/js/*.js', '!./src/js/*.min.js'];
+const JS_DEST        = ['./src/js'];
+const JS_TASK        = 'js';
+const BOOTSTRAP_SRC  = [
+    './node_modules/bootstrap/dist/**/*',
+    '!./node_modules/bootstrap/dist/css/bootstrap-grid*',
+    '!./node_modules/bootstrap/dist/css/bootstrap-reboot*'
+];
+const BOOTSTRAP_DEST = './vendor/bootstrap';
+const FA_SRC         = ['./node_modules/@fortawesome/**/*'];
+const FA_DEST        = './vendor';
+const JQUERY_SRC     = [
+    './node_modules/jquery/dist/*',
+    '!./node_modules/jquery/dist/core.js'
+];
+const JQUERY_DEST    = './vendor/jquery';
+const EASING_SRC     = [
+    './node_modules/jquery.easing/*.js'
+];
+const EASING_DEST    = './vendor/jquery-easing';
+const VENDOR_SRC     = _.concat(BOOTSTRAP_SRC, FA_SRC, JQUERY_SRC, EASING_SRC);
+const VENDOR_TASK    = 'vendor';
+const WATCH_TASK     = 'watch';
+const DEFAULT_TASK   = 'default';
 
 
 // Pug compile to html
-gulp.task('pug', gulp.series(() => {
+gulp.task(PUG_TASK, gulp.series(() => {
 
-    return gulp.src([
-            '**/*.pug',
-            '!node_modules/**/*.pug'
-        ])
+    return gulp.src(PUG_SRC)
         .pipe(pug())
         .pipe(header(BANNER_HTML, { pkg }))
-        .pipe(gulp.dest('./'));
+        .pipe(gulp.dest(HTML_DEST));
 
 }));
 
 
 // Compile SCSS
-gulp.task('css', function() {
+gulp.task(CSS_TASK, () => {
 
-    return gulp.src('./src/css/*.scss')
-        .pipe(sass.sync({
-            outputStyle: 'expanded'
-        })
+    return gulp.src(SCSS_SRC)
+        .pipe(sass.sync({ outputStyle: 'expanded' })
         .on('error', sass.logError))
         .pipe(cleanCSS())
-        .pipe(header(BANNER_CSS, {
-            pkg: pkg
-        }))
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(gulp.dest('./src/css/'));
+        .pipe(header(BANNER_CSS, { pkg }))
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest(CSS_DEST));
+
+});
+
+
+// Javascript
+gulp.task(JS_TASK, () => {
+
+    return gulp.src(JS_SRC)
+        .pipe(uglify())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(header(BANNER_JS, { pkg }))
+        .pipe(gulp.dest(JS_DEST));
 
 });
 
 
 // Copy third party libraries from /node_modules into /vendor
-gulp.task('vendor', function() {
+gulp.task(VENDOR_TASK, () => {
 
     return merge(
 
         // Bootstrap
-        gulp.src([
-            './node_modules/bootstrap/dist/**/*',
-            '!./node_modules/bootstrap/dist/css/bootstrap-grid*',
-            '!./node_modules/bootstrap/dist/css/bootstrap-reboot*'
-        ]).pipe(gulp.dest('./vendor/bootstrap')),
+        gulp.src(BOOTSTRAP_SRC).pipe(gulp.dest(BOOTSTRAP_DEST)),
 
         // Font Awesome 5
-        gulp.src([
-            './node_modules/@fortawesome/**/*'
-        ]).pipe(gulp.dest('./vendor')),
+        gulp.src(FA_SRC).pipe(gulp.dest(FA_DEST)),
 
         // jQuery
-        gulp.src([
-            './node_modules/jquery/dist/*',
-            '!./node_modules/jquery/dist/core.js'
-        ]).pipe(gulp.dest('./vendor/jquery')),
+        gulp.src(JQUERY_SRC).pipe(gulp.dest(JQUERY_DEST)),
 
         // jQuery Easing
-        gulp.src([
-            './node_modules/jquery.easing/*.js'
-        ]).pipe(gulp.dest('./vendor/jquery-easing')),
+        gulp.src(EASING_SRC).pipe(gulp.dest(EASING_DEST)),
 
     );
 
@@ -96,10 +129,15 @@ gulp.task('vendor', function() {
 
 
 // Default task
-gulp.task('default', gulp.parallel('pug', 'css', 'vendor'));
+gulp.task(DEFAULT_TASK, gulp.parallel(PUG_TASK, CSS_TASK, JS_TASK, VENDOR_TASK));
 
 
 // Gulp watch
-gulp.task('watch', gulp.series('default', () => {
-    gulp.watch('**/*.pug', gulp.series('pug'));
+gulp.task(WATCH_TASK, gulp.series(DEFAULT_TASK, () => {
+
+    gulp.watch(PUG_SRC, gulp.series(PUG_TASK));
+    gulp.watch(SCSS_SRC, gulp.series(CSS_TASK));
+    gulp.watch(JS_SRC, gulp.series(JS_TASK));
+    gulp.watch(VENDOR_SRC, gulp.series(VENDOR_TASK));
+
 }));
