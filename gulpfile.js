@@ -37,10 +37,10 @@ const BANNER_JS      = `/*\n * ${BANNER_TEXT.join('\n * ')}\n */\n`;
 
 
 // Gulp constants
-const PUG_SRC        = ['**/*.pug', '!node_modules/**/*.pug'];
+const PUG_SRC        = ['index.pug'];
 const HTML_DEST      = './';
 const PUG_TASK       = 'pug';
-const SCSS_SRC       = ['./src/css/*.scss'];
+const SCSS_SRC       = ['./src/css/main.scss'];
 const CSS_DEST       = './src/css';
 const CSS_TASK       = 'css';
 const JS_SRC         = ['./src/js/*.js', '!./src/js/*.min.js'];
