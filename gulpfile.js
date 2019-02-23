@@ -38,9 +38,11 @@ const BANNER_JS      = `/*\n * ${BANNER_TEXT.join('\n * ')}\n */\n`;
 
 // Gulp constants
 const PUG_SRC        = ['index.pug'];
+const PUG_WATCH_SRC  = ['index.pug', 'src/**/*.pug'];
 const HTML_DEST      = './';
 const PUG_TASK       = 'pug';
 const SCSS_SRC       = ['./src/css/main.scss'];
+const SCSS_WATCH_SRC = ['src/css/**/*.scss'];
 const CSS_DEST       = './src/css';
 const CSS_TASK       = 'css';
 const JS_SRC         = ['./src/js/*.js', '!./src/js/*.min.js'];
@@ -135,8 +137,8 @@ gulp.task(DEFAULT_TASK, gulp.parallel(PUG_TASK, CSS_TASK, JS_TASK, VENDOR_TASK))
 // Gulp watch
 gulp.task(WATCH_TASK, gulp.series(DEFAULT_TASK, () => {
 
-    gulp.watch(PUG_SRC, gulp.series(PUG_TASK));
-    gulp.watch(SCSS_SRC, gulp.series(CSS_TASK));
+    gulp.watch(PUG_WATCH_SRC, gulp.series(PUG_TASK));
+    gulp.watch(SCSS_WATCH_SRC, gulp.series(CSS_TASK));
     gulp.watch(JS_SRC, gulp.series(JS_TASK));
     gulp.watch(VENDOR_SRC, gulp.series(VENDOR_TASK));
 
