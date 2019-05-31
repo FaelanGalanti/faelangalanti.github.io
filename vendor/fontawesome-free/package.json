@@ -1,33 +1,29 @@
 {
-  "_args": [
-    [
-      "@fortawesome/fontawesome-free@5.6.1",
-      "/Users/faelan/projects/personal/faelangalanti.github.io"
-    ]
-  ],
-  "_from": "@fortawesome/fontawesome-free@5.6.1",
-  "_id": "@fortawesome/fontawesome-free@5.6.1",
+  "_from": "@fortawesome/fontawesome-free@5.8.2",
+  "_id": "@fortawesome/fontawesome-free@5.8.2",
   "_inBundle": false,
-  "_integrity": "sha512-0afQfB+HBeJHlXPzcF2Jjh78SbwPSkDjba/O7pZFzAW3WGKNzd4s4AqrZo7oIlMWGnfoyDo8+QeosK0+DTDrTg==",
+  "_integrity": "sha512-E4fDUF4fbu9AxKpaQQqCN3XBnNzb/5e0Gvd9OaQsYkK574LVI57v/EqqPfIm/mC7jYbxaPNrhvT5AF+Yzwyizg==",
   "_location": "/@fortawesome/fontawesome-free",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "@fortawesome/fontawesome-free@5.6.1",
+    "raw": "@fortawesome/fontawesome-free@5.8.2",
     "name": "@fortawesome/fontawesome-free",
     "escapedName": "@fortawesome%2ffontawesome-free",
     "scope": "@fortawesome",
-    "rawSpec": "5.6.1",
+    "rawSpec": "5.8.2",
     "saveSpec": null,
-    "fetchSpec": "5.6.1"
+    "fetchSpec": "5.8.2"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-5.6.1.tgz",
-  "_spec": "5.6.1",
-  "_where": "/Users/faelan/projects/personal/faelangalanti.github.io",
+  "_resolved": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-5.8.2.tgz",
+  "_shasum": "fae4112c4fb47086f6ae167e32524b280000abd5",
+  "_spec": "@fortawesome/fontawesome-free@5.8.2",
+  "_where": "/Users/faelan/other/projects/personal/faelangalanti.github.io",
   "author": {
     "name": "Dave Gandy",
     "email": "dave@fontawesome.com",
@@ -36,6 +32,7 @@
   "bugs": {
     "url": "http://github.com/FortAwesome/Font-Awesome/issues"
   },
+  "bundleDependencies": false,
   "contributors": [
     {
       "name": "Brian Talbot",
@@ -59,6 +56,7 @@
     }
   ],
   "dependencies": {},
+  "deprecated": false,
   "description": "The iconic font, CSS, and SVG framework",
   "engines": {
     "node": ">=6"
@@ -80,5 +78,5 @@
     "url": "git+https://github.com/FortAwesome/Font-Awesome.git"
   },
   "style": "css/fontawesome.css",
-  "version": "5.6.1"
+  "version": "5.8.2"
 }
